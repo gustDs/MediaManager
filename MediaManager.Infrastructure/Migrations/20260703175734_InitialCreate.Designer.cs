@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediaManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260703174912_InitialCreate")]
+    [Migration("20260703175734_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,13 +27,13 @@ namespace MediaManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataFim")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataInicio")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("HorasJogadas")
                         .HasColumnType("INTEGER");
@@ -69,7 +69,7 @@ namespace MediaManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -97,7 +97,7 @@ namespace MediaManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()

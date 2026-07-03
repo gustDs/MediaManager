@@ -24,13 +24,13 @@ namespace MediaManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataFim")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DataInicio")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("HorasJogadas")
                         .HasColumnType("INTEGER");
@@ -66,7 +66,7 @@ namespace MediaManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -94,7 +94,7 @@ namespace MediaManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()

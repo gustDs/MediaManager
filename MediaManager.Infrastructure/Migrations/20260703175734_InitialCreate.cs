@@ -18,7 +18,7 @@ namespace MediaManager.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
-                    CriadoEm = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CriadoEm = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,7 @@ namespace MediaManager.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     Tipo = table.Column<string>(type: "TEXT", nullable: false),
-                    CriadoEm = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CriadoEm = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -53,13 +53,13 @@ namespace MediaManager.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     MediaItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: false),
-                    DataInicio = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataFim = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataInicio = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DataFim = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Nota = table.Column<decimal>(type: "TEXT", precision: 3, scale: 1, nullable: true),
                     Resenha = table.Column<string>(type: "TEXT", nullable: true),
                     HorasJogadas = table.Column<int>(type: "INTEGER", nullable: true),
                     PaginasLidas = table.Column<int>(type: "INTEGER", nullable: true),
-                    CriadoEm = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CriadoEm = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

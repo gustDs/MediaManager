@@ -23,10 +23,12 @@ public class AppDbContext : DbContext
     {
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
-            foreach (var property in entity.GetProperties()
-                .Where(p => p.ClrType == typeof(Guid) || p.ClrType == typeof(Guid?)))
+            foreach (var property in entity.GetProperties())
             {
-                property.SetColumnType("uuid");
+                if (property.ClrType == typeof(Guid) || property.ClrType == typeof(Guid?))
+                    property.SetColumnType("uuid");
+                else if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                    property.SetColumnType("timestamp with time zone");
             }
         }
 
