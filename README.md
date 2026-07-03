@@ -8,10 +8,9 @@ Sistema pessoal de gerenciamento de mídias — filmes, séries, jogos e livros.
 
 **Backend**
 - .NET 10 / ASP.NET Core
-- EF Core + SQLite (dev) / PostgreSQL ou SQL Server (prod)
+- EF Core + SQLite (dev) / PostgreSQL via Npgsql (prod)
 - MediatR (CQRS lógico)
 - FluentValidation
-- Protobuf via Grpc.Tools (geração de classes, transporte JSON/REST)
 - Repository pattern
 - JWT Bearer authentication (BCrypt para hash de senhas)
 
@@ -19,6 +18,11 @@ Sistema pessoal de gerenciamento de mídias — filmes, séries, jogos e livros.
 - Vue 3 + Vite
 - PrimeVue 4
 - Vue Router
+
+**Infraestrutura (produção)**
+- Backend: [Render.com](https://render.com) (Docker)
+- Frontend: [Vercel](https://vercel.com)
+- Banco de dados: [Supabase](https://supabase.com) (PostgreSQL)
 
 ---
 
@@ -111,12 +115,26 @@ npm run dev
 
 ---
 
+## Deploy
+
+O projeto está hospedado em produção:
+
+- **Frontend**: Vercel — deploy automático a cada push na `main`
+- **Backend**: Render.com — build via Dockerfile, deploy automático a cada push na `main`
+- **Banco de dados**: Supabase (PostgreSQL) — migrations aplicadas automaticamente na inicialização do backend
+
+Variáveis de ambiente necessárias no Render:
+- `ConnectionStrings__DefaultConnection` — connection string do Supabase
+- `Jwt__SecretKey` — chave secreta para assinar os tokens JWT
+
+---
+
 ## Roadmap
 
 - [x] CRUD de MediaItem
 - [x] CRUD de ConsumptionRecord
 - [x] Frontend Vue 3 com dark mode
 - [x] Autenticação com JWT (login e senha)
-- [ ] Hospedagem
+- [x] Deploy em produção (Render + Vercel + Supabase)
 - [ ] Kanban view (v2 de UI)
 - [ ] Campos específicos por tipo de mídia (perfumaria)
