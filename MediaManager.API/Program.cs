@@ -44,9 +44,12 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyMethod()
-              .AllowAnyHeader()));
+        policy.WithOrigins(
+            "http://localhost:5173",
+            "https://media-manager-henna.vercel.app"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
