@@ -21,6 +21,15 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entity.GetProperties()
+                .Where(p => p.ClrType == typeof(Guid) || p.ClrType == typeof(Guid?)))
+            {
+                property.SetColumnType("uuid");
+            }
+        }
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id);
