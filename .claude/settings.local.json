@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(dotnet --version)",
+      "PowerShell(dotnet tool install *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem -Recurse C:\\\\estudos\\\\MediaManager\\\\media-manager-frontend | Where-Object { !$_.PSIsContainer })"
+    ]
+  }
+}

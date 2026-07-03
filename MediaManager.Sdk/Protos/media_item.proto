@@ -1,0 +1,24 @@
+syntax = "proto3";
+option csharp_namespace = "MediaManager.Sdk";
+
+message MediaItemResponse {
+    string id = 1;
+    string nome = 2;
+    string tipo = 3;
+    string criado_em = 4;
+    optional string status_atual = 5;
+}
+
+message CreateMediaItemRequest {
+    string nome = 1;
+    string tipo = 2;
+}
+
+message UpdateMediaItemRequest {
+    string id = 1;
+    string nome = 2;
+}
+
+message MediaItemListResponse {
+    repeated MediaItemResponse items = 1;
+}

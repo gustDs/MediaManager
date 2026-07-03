@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="MediaManager.API/MediaManager.API.csproj" />
+  <Project Path="MediaManager.Application/MediaManager.Application.csproj" />
+  <Project Path="MediaManager.Domain/MediaManager.Domain.csproj" />
+  <Project Path="MediaManager.Infrastructure/MediaManager.Infrastructure.csproj" />
+  <Project Path="MediaManager.Sdk/MediaManager.Sdk.csproj" />
+</Solution>

@@ -1,0 +1,40 @@
+syntax = "proto3";
+option csharp_namespace = "MediaManager.Sdk";
+
+message ConsumptionRecordResponse {
+    string id = 1;
+    string media_item_id = 2;
+    string status = 3;
+    optional string data_inicio = 4;
+    optional string data_fim = 5;
+    optional double nota = 6;
+    optional string resenha = 7;
+    optional int32 horas_jogadas = 8;
+    optional int32 paginas_lidas = 9;
+    string criado_em = 10;
+}
+
+message CreateConsumptionRecordRequest {
+    string media_item_id = 1;
+    string status = 2;
+    optional string data_inicio = 3;
+    optional double nota = 4;
+    optional string resenha = 5;
+    optional int32 horas_jogadas = 6;
+    optional int32 paginas_lidas = 7;
+}
+
+message UpdateConsumptionRecordRequest {
+    string id = 1;
+    string status = 2;
+    optional string data_inicio = 3;
+    optional string data_fim = 4;
+    optional double nota = 5;
+    optional string resenha = 6;
+    optional int32 horas_jogadas = 7;
+    optional int32 paginas_lidas = 8;
+}
+
+message ConsumptionRecordListResponse {
+    repeated ConsumptionRecordResponse records = 1;
+}

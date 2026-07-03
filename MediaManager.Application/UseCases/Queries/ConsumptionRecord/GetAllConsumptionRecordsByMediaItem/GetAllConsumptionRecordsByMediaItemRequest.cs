@@ -1,0 +1,5 @@
+using MediatR;
+
+namespace MediaManager.Application.UseCases.Queries.ConsumptionRecord.GetAllConsumptionRecordsByMediaItem;
+
+public record GetAllConsumptionRecordsByMediaItemRequest(string MediaItemId) : IRequest<GetAllConsumptionRecordsByMediaItemResponse>;
