@@ -13,6 +13,7 @@ Sistema pessoal de gerenciamento de mídias — filmes, séries, jogos e livros.
 - FluentValidation
 - Protobuf via Grpc.Tools (geração de classes, transporte JSON/REST)
 - Repository pattern
+- JWT Bearer authentication (BCrypt para hash de senhas)
 
 **Frontend**
 - Vue 3 + Vite
@@ -40,10 +41,19 @@ MediaManager/
 
 ## Modelo de dados
 
+**User**
+| Campo | Tipo | Descrição |
+|---|---|---|
+| Id | Guid | PK |
+| Email | string | Único, obrigatório |
+| PasswordHash | string | BCrypt |
+| CriadoEm | DateTime | Gerado automaticamente |
+
 **MediaItem**
 | Campo | Tipo | Descrição |
 |---|---|---|
 | Id | Guid | PK |
+| UserId | Guid | FK para User |
 | Nome | string | Obrigatório |
 | Tipo | enum | Filme, Serie, Jogo, Livro |
 | CriadoEm | DateTime | Gerado automaticamente |
@@ -72,6 +82,7 @@ MediaManager/
 - **Protobuf**: usado apenas para geração de classes C# via Grpc.Tools — o transporte é JSON/REST convencional
 - **Repository pattern**: handlers da Application acessam dados via interfaces, implementadas na Infrastructure
 - **Status derivado**: o status de um item é sempre calculado a partir do registro de consumo mais recente
+- **Isolamento por usuário**: cada usuário vê e manipula apenas seus próprios MediaItems — filtro aplicado nos handlers via `ICurrentUserService`
 
 ---
 
@@ -105,7 +116,7 @@ npm run dev
 - [x] CRUD de MediaItem
 - [x] CRUD de ConsumptionRecord
 - [x] Frontend Vue 3 com dark mode
-- [ ] Autenticação com JWT (login e senha)
+- [x] Autenticação com JWT (login e senha)
 - [ ] Hospedagem
 - [ ] Kanban view (v2 de UI)
 - [ ] Campos específicos por tipo de mídia (perfumaria)
