@@ -29,6 +29,14 @@ public class AppDbContext : DbContext
                     property.SetColumnType("uuid");
                 else if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                     property.SetColumnType("timestamp with time zone");
+                else if (property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?))
+                    property.SetColumnType("numeric");
+                else if (property.ClrType == typeof(string))
+                    property.SetColumnType("text");
+                else if (property.ClrType == typeof(int) || property.ClrType == typeof(int?))
+                    property.SetColumnType("integer");
+                else if (property.ClrType == typeof(bool) || property.ClrType == typeof(bool?))
+                    property.SetColumnType("boolean");
             }
         }
 
