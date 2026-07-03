@@ -2,16 +2,20 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Dialog from 'primevue/dialog'
+import ConfirmDialog from 'primevue/confirmdialog'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import DatePicker from 'primevue/datepicker'
+import { useConfirm } from 'primevue/useconfirm'
 import * as mediaItemService from '../services/mediaItemService'
 import * as consumptionRecordService from '../services/consumptionRecordService'
+import { removeToken } from '../services/authService'
 
 const route = useRoute()
 const router = useRouter()
+const confirm = useConfirm()
 
 const NAV_ITEMS = [
   { key: 'Todos', label: 'Todos', color: '#94a3b8' },
@@ -29,6 +33,7 @@ const mediaItem = ref(null)
 const records = ref([])
 const dialogVisible = ref(false)
 const editingRecord = ref(null)
+const saveError = ref(null)
 const form = ref({
   status: null, dataInicio: null, dataFim: null,
   nota: null, resenha: null, horasJogadas: null, paginasLidas: null,
@@ -62,6 +67,7 @@ async function load() {
 function openNew() {
   editingRecord.value = null
   form.value = { status: null, dataInicio: null, dataFim: null, nota: null, resenha: null, horasJogadas: null, paginasLidas: null }
+  saveError.value = null
   dialogVisible.value = true
 }
 
@@ -76,34 +82,55 @@ function openEdit(record) {
     horasJogadas: record.horasJogadas,
     paginasLidas: record.paginasLidas,
   }
+  saveError.value = null
   dialogVisible.value = true
 }
 
 async function save() {
-  const payload = {
-    status: form.value.status,
-    dataInicio: toISOOrNull(form.value.dataInicio),
-    dataFim: toISOOrNull(form.value.dataFim),
-    nota: form.value.nota,
-    resenha: form.value.resenha,
-    horasJogadas: form.value.horasJogadas,
-    paginasLidas: form.value.paginasLidas,
+  saveError.value = null
+  try {
+    const payload = {
+      status: form.value.status,
+      dataInicio: toISOOrNull(form.value.dataInicio),
+      dataFim: toISOOrNull(form.value.dataFim),
+      nota: form.value.nota,
+      resenha: form.value.resenha,
+      horasJogadas: form.value.horasJogadas,
+      paginasLidas: form.value.paginasLidas,
+    }
+    if (editingRecord.value) {
+      await consumptionRecordService.update(editingRecord.value.id, payload)
+    } else {
+      await consumptionRecordService.create({ ...payload, mediaItemId: route.params.id })
+    }
+    dialogVisible.value = false
+    await load()
+  } catch (e) {
+    saveError.value = e.message
   }
-  if (editingRecord.value) {
-    await consumptionRecordService.update(editingRecord.value.id, payload)
-  } else {
-    await consumptionRecordService.create({ ...payload, mediaItemId: route.params.id })
-  }
-  dialogVisible.value = false
-  await load()
 }
 
-async function deleteRecord(id) {
-  await consumptionRecordService.remove(id)
-  await load()
+function deleteRecord(id) {
+  confirm.require({
+    message: 'Tem certeza que deseja excluir esta sessão?',
+    header: 'Confirmar exclusão',
+    icon: 'pi pi-trash',
+    rejectLabel: 'Cancelar',
+    acceptLabel: 'Excluir',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      await consumptionRecordService.remove(id)
+      await load()
+    }
+  })
 }
 
 onMounted(load)
+
+function logout() {
+  removeToken()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -130,6 +157,15 @@ onMounted(load)
           {{ nav.label }}
         </button>
       </nav>
+      <div style="margin-top: auto; padding: 0 8px 8px;">
+        <button
+          @click="logout"
+          style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 8px; border: none; background: transparent; color: #94a3b8; cursor: pointer; font-size: 14px; border-radius: 6px;"
+        >
+          <span class="pi pi-sign-out" style="font-size: 14px;"></span>
+          Sair
+        </button>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -258,11 +294,16 @@ onMounted(load)
         <InputNumber v-model="form.paginasLidas" :min="0" />
       </div>
     </div>
+    <div v-if="saveError" style="color: #f87171; font-size: 13px; margin-top: 8px;">
+      {{ saveError }}
+    </div>
     <template #footer>
       <Button label="Cancelar" text @click="dialogVisible = false" />
       <Button label="Salvar" :style="{ background: itemColor, borderColor: itemColor }" @click="save" />
     </template>
   </Dialog>
+
+  <ConfirmDialog />
 </template>
 
 <style scoped>

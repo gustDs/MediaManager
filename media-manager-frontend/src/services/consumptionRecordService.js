@@ -12,8 +12,12 @@ async function request(url, options = {}) {
     ...options,
   })
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: response.statusText }))
-    throw new Error(error.error ?? response.statusText)
+    const body = await response.json().catch(() => null)
+    if (body?.errors) {
+      const messages = Object.values(body.errors).flat().join(' ')
+      throw new Error(messages)
+    }
+    throw new Error(body?.error ?? body?.title ?? response.statusText)
   }
   if (response.status === 204) return null
   return response.json()

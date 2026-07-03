@@ -2,14 +2,18 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Dialog from 'primevue/dialog'
+import ConfirmDialog from 'primevue/confirmdialog'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
 import Button from 'primevue/button'
+import { useConfirm } from 'primevue/useconfirm'
 import { IconMovie, IconDeviceTv, IconDeviceGamepad2, IconBook } from '@tabler/icons-vue'
 import * as mediaItemService from '../services/mediaItemService'
 import * as consumptionRecordService from '../services/consumptionRecordService'
+import { removeToken } from '../services/authService'
 
 const router = useRouter()
+const confirm = useConfirm()
 
 const TYPE_CONFIG = {
   Filme: { color: '#7F77DD', icon: IconMovie,          label: 'Filme' },
@@ -38,6 +42,7 @@ const selectedType = ref('Todos')
 const dialogVisible = ref(false)
 const editingItem = ref(null)
 const form = ref({ nome: '', tipo: null })
+const saveError = ref(null)
 
 const activeColor = computed(() =>
   selectedType.value === 'Todos' ? '#94a3b8' : (TYPE_CONFIG[selectedType.value]?.color ?? '#94a3b8')
@@ -69,31 +74,53 @@ async function loadItems() {
 function openNew() {
   editingItem.value = null
   form.value = { nome: '', tipo: selectedType.value !== 'Todos' ? selectedType.value : null }
+  saveError.value = null
   dialogVisible.value = true
 }
 
 function openEdit(item) {
   editingItem.value = item
   form.value = { nome: item.nome, tipo: item.tipo }
+  saveError.value = null
   dialogVisible.value = true
 }
 
 async function save() {
-  if (editingItem.value) {
-    await mediaItemService.update(editingItem.value.id, { nome: form.value.nome })
-  } else {
-    await mediaItemService.create({ nome: form.value.nome, tipo: form.value.tipo })
+  saveError.value = null
+  try {
+    if (editingItem.value) {
+      await mediaItemService.update(editingItem.value.id, { nome: form.value.nome })
+    } else {
+      await mediaItemService.create({ nome: form.value.nome, tipo: form.value.tipo })
+    }
+    dialogVisible.value = false
+    await loadItems()
+  } catch (e) {
+    saveError.value = e.message
   }
-  dialogVisible.value = false
-  await loadItems()
 }
 
-async function deleteItem(id) {
-  await mediaItemService.remove(id)
-  await loadItems()
+function deleteItem(id) {
+  confirm.require({
+    message: 'Tem certeza que deseja excluir este item? Todas as sessões serão removidas.',
+    header: 'Confirmar exclusão',
+    icon: 'pi pi-trash',
+    rejectLabel: 'Cancelar',
+    acceptLabel: 'Excluir',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      await mediaItemService.remove(id)
+      await loadItems()
+    }
+  })
 }
 
 onMounted(loadItems)
+
+function logout() {
+  removeToken()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -120,6 +147,15 @@ onMounted(loadItems)
           {{ nav.label }}
         </button>
       </nav>
+      <div style="margin-top: auto; padding: 0 8px 8px;">
+        <button
+          @click="logout"
+          style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 8px; border: none; background: transparent; color: #94a3b8; cursor: pointer; font-size: 14px; border-radius: 6px;"
+        >
+          <span class="pi pi-sign-out" style="font-size: 14px;"></span>
+          Sair
+        </button>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -201,11 +237,16 @@ onMounted(loadItems)
                 placeholder="Selecione o tipo" :disabled="!!editingItem" />
       </div>
     </div>
+    <div v-if="saveError" style="color: #f87171; font-size: 13px; margin-top: 8px;">
+      {{ saveError }}
+    </div>
     <template #footer>
       <Button label="Cancelar" text @click="dialogVisible = false" />
       <Button label="Salvar" :style="{ background: activeColor, borderColor: activeColor }" @click="save" />
     </template>
   </Dialog>
+
+  <ConfirmDialog />
 </template>
 
 <style scoped>

@@ -1,6 +1,8 @@
 using System.Text;
 using FluentValidation;
+using MediatR;
 using MediaManager.API;
+using MediaManager.Application.Behaviors;
 using MediaManager.Application.Interfaces;
 using MediaManager.Application.UseCases.Commands.Media.CreateMedia;
 using MediaManager.Infrastructure.Persistence;
@@ -19,7 +21,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreateMediaHandler).Assembly));
+{
+    cfg.RegisterServicesFromAssembly(typeof(CreateMediaHandler).Assembly);
+    cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+});
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateMediaHandler).Assembly);
 
