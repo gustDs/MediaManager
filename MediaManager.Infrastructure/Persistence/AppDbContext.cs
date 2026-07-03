@@ -1,6 +1,7 @@
 using MediaManager.Domain.Entities;
 using MediaManager.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace MediaManager.Infrastructure.Persistence;
 
@@ -11,6 +12,12 @@ public class AppDbContext : DbContext
     public DbSet<ConsumptionRecord> ConsumptionRecords => Set<ConsumptionRecord>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ConfigureWarnings(w =>
+            w.Ignore(RelationalEventId.PendingModelChangesWarning));
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
