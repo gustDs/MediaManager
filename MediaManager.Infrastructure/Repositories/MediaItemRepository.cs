@@ -16,9 +16,10 @@ public class MediaItemRepository : IMediaItemRepository
             .Include(m => m.ConsumptionRecords)
             .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
 
-    public async Task<List<MediaItem>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<MediaItem>> GetAllAsync(Guid userId, CancellationToken cancellationToken = default)
         => await _context.MediaItems
             .Include(m => m.ConsumptionRecords)
+            .Where(m => m.UserId == userId)
             .ToListAsync(cancellationToken);
 
     public async Task AddAsync(MediaItem item, CancellationToken cancellationToken = default)

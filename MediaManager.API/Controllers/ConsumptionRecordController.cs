@@ -4,10 +4,12 @@ using MediaManager.Application.UseCases.Commands.ConsumptionRecord.UpdateConsump
 using MediaManager.Application.UseCases.Commands.ConsumptionRecord.DeleteConsumptionRecord;
 using MediaManager.Application.UseCases.Queries.ConsumptionRecord.GetConsumptionRecordById;
 using MediaManager.Application.UseCases.Queries.ConsumptionRecord.GetAllConsumptionRecordsByMediaItem;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediaManager.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/consumption-records")]
 public class ConsumptionRecordController : ControllerBase

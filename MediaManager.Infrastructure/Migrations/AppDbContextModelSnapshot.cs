@@ -77,9 +77,40 @@ namespace MediaManager.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("MediaItems");
+                });
+
+            modelBuilder.Entity("MediaManager.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MediaManager.Domain.Entities.ConsumptionRecord", b =>
@@ -95,7 +126,23 @@ namespace MediaManager.Infrastructure.Migrations
 
             modelBuilder.Entity("MediaManager.Domain.Entities.MediaItem", b =>
                 {
+                    b.HasOne("MediaManager.Domain.Entities.User", "User")
+                        .WithMany("MediaItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MediaManager.Domain.Entities.MediaItem", b =>
+                {
                     b.Navigation("ConsumptionRecords");
+                });
+
+            modelBuilder.Entity("MediaManager.Domain.Entities.User", b =>
+                {
+                    b.Navigation("MediaItems");
                 });
 #pragma warning restore 612, 618
         }

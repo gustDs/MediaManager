@@ -1,8 +1,13 @@
+import { getToken } from './authService'
+
 const BASE_URL = 'http://localhost:5264/api/media-items'
 
 async function request(url, options = {}) {
   const response = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getToken()}`,
+    },
     ...options,
   })
   if (!response.ok) {

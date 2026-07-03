@@ -4,10 +4,12 @@ using MediaManager.Application.UseCases.Commands.Media.UpdateMedia;
 using MediaManager.Application.UseCases.Commands.Media.DeleteMedia;
 using MediaManager.Application.UseCases.Queries.Media.GetMediaById;
 using MediaManager.Application.UseCases.Queries.Media.GetAllMedia;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediaManager.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/media-items")]
 public class MediaItemController : ControllerBase
