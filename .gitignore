@@ -432,3 +432,8 @@ media-manager-frontend/dist
 *.db
 *.db-shm
 *.db-wal
+
+# Environment files
+media-manager-frontend/.env.local
+media-manager-frontend/.env.production
+media-manager-frontend/.env.development

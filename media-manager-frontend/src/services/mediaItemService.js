@@ -1,6 +1,6 @@
 import { getToken } from './authService'
 
-const BASE_URL = 'http://localhost:5264/api/media-items'
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/media-items`
 
 async function request(url, options = {}) {
   const response = await fetch(url, {

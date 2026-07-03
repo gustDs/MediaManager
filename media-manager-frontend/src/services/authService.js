@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5264/api/auth'
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/auth`
 
 async function request(url, body) {
   const response = await fetch(url, {
